@@ -1,0 +1,54 @@
+---
+import { AUTHOR, SOCIAL_LINKS } from '../consts';
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+	title="About · komo.sh"
+	description="komo — a technologist working in automation. Small sharp tools, AI agents, and the boring plumbing that makes them work."
+>
+	<div class="wrap">
+		<section class="hero" style="padding:56px 0 28px;">
+			<div class="prompt"><span class="g">$</span> cat about.md</div>
+			<h1><span class="g">whoami</span></h1>
+			<p class="sub" style="font-style:italic;">ship small. overengineer nothing.</p>
+		</section>
+
+		<article class="prose" style="padding:28px 0 8px;">
+			<p>{AUTHOR.bio}</p>
+			<p>
+				Most of what I do lives at the unglamorous layer: parsing messy inputs, wiring retries,
+				and trusting an agent&rsquo;s output enough to stop babysitting it. The loop was never the
+				hard part. I write here about the things that actually shipped, the ones that quietly
+				died, and the habits that survived contact with production.
+			</p>
+
+			<h2>What you&rsquo;ll find here</h2>
+			<ul>
+				<li><b>Build logs</b> — small command-line tools and the decisions behind them.</li>
+				<li><b>Agents, honestly</b> — what works, what&rsquo;s a for-loop in a trench coat.</li>
+				<li><b>Plumbing</b> — the boring 80% nobody demos: parsing, retries, queues, cron.</li>
+			</ul>
+
+			<h2>The short version</h2>
+		</article>
+
+		<section class="blk about" style="border-bottom:none;padding-top:8px;">
+			<p class="vitals">
+				<b>born</b> {AUTHOR.born} · <b>edu</b> {AUTHOR.edu} · <b>{AUTHOR.pronouns}</b>
+			</p>
+			<p class="dim" style="margin-top:14px;">
+				Elsewhere: {
+					SOCIAL_LINKS.map((s, i) => (
+						<>
+							{i > 0 && ' · '}
+							<a href={s.href} target="_blank" rel="me noopener">
+								{s.label}
+							</a>
+						</>
+					))
+				}
+			</p>
+		</section>
+	</div>
+</BaseLayout>

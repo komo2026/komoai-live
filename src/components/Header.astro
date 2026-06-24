@@ -1,0 +1,47 @@
+---
+import { NAV_LINKS } from '../consts';
+
+const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isActive = (href: string) =>
+	href === '/' ? pathname === '/' : pathname === href || pathname.startsWith(href + '/');
+---
+
+<header class="site">
+	<div class="wrap bar">
+		<a class="brand" href="/"><span class="b">komo</span>.sh</a>
+		<nav class="main" aria-label="Primary">
+			{
+				NAV_LINKS.map((link) => (
+					<a href={link.href} class:list={[{ active: isActive(link.href) }]}>
+						{link.label}
+					</a>
+				))
+			}
+		</nav>
+		<div class="tools">
+			<button class="theme-toggle" id="themeBtn" aria-label="Toggle light/dark">
+				<span class="ico-sun" aria-hidden="true">☀</span>
+				<span class="ico-moon" aria-hidden="true">☾</span>
+			</button>
+		</div>
+	</div>
+</header>
+
+<script is:inline>
+	(function () {
+		var root = document.documentElement,
+			k = 'komo-theme',
+			b = document.getElementById('themeBtn');
+		if (!b) return;
+		function sync() {
+			b.setAttribute('aria-pressed', root.getAttribute('data-theme') === 'dark');
+		}
+		sync();
+		b.addEventListener('click', function () {
+			var n = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+			root.setAttribute('data-theme', n);
+			localStorage.setItem(k, n);
+			sync();
+		});
+	})();
+</script>

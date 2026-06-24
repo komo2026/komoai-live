@@ -1,0 +1,90 @@
+---
+import { getCollection } from 'astro:content';
+import FormattedDate from '../components/FormattedDate.astro';
+import { AUTHOR, QUOTE, SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const posts = (await getCollection('blog')).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+const [featured, ...rest] = posts;
+const recent = rest.slice(0, 5);
+---
+
+<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
+	<div class="wrap">
+		<!-- HERO -->
+		<section class="hero">
+			<div class="prompt"><span class="g">$</span> whoami<span class="cursor" aria-hidden="true"></span></div>
+			<h1><span class="g">Komo</span>&rsquo;s personal space</h1>
+			<p class="sub" style="font-style:italic;">&ldquo;{QUOTE}&rdquo;</p>
+			<div class="cta">
+				<a class="btn primary" href="/blog">Read the blog</a>
+				<a class="btn" href="/about">About me</a>
+			</div>
+		</section>
+
+		<!-- ABOUT -->
+		<section class="blk about" id="about">
+			<div class="sec-head"><h2>whoami</h2></div>
+			<p>{AUTHOR.bio}</p>
+			<p class="vitals">
+				<b>born</b> {AUTHOR.born} · <b>edu</b> {AUTHOR.edu} · <b>{AUTHOR.pronouns}</b>
+			</p>
+		</section>
+
+		<!-- FEATURED / LATEST -->
+		<section class="blk" id="featured">
+			<div class="sec-head"><h2>Latest</h2></div>
+			{
+				featured ? (
+					<a class="feature" href={`/blog/${featured.id}/`} style="display:block;">
+						<div class="kicker mono">latest post</div>
+						<h3>{featured.data.title}</h3>
+						<p>{featured.data.description}</p>
+						<div class="meta">
+							<FormattedDate date={featured.data.pubDate} />
+						</div>
+					</a>
+				) : (
+					<div class="empty">
+						<span class="c"># the blog is fresh out of the oven.</span>
+						<br />
+						<span class="g">$</span> ls posts/
+						<br />
+						<span class="c"># nothing here yet — first post is being written.</span>
+					</div>
+				)
+			}
+		</section>
+
+		<!-- POSTS -->
+		<section class="blk" id="posts">
+			<div class="sec-head">
+				<h2>Blog</h2>
+				{recent.length > 0 && <a href="/blog">archive →</a>}
+			</div>
+			{
+				recent.length > 0 ? (
+					recent.map((post) => (
+						<a class="post" href={`/blog/${post.id}/`}>
+							<div class="top">
+								<h3>{post.data.title}</h3>
+								<span class="date">
+									<FormattedDate date={post.data.pubDate} />
+								</span>
+							</div>
+							<p>{post.data.description}</p>
+						</a>
+					))
+				) : (
+					<div class="empty">
+						<span class="g">$</span> git log --oneline
+						<br />
+						<span class="c"># no commits yet. ship small, ship soon.</span>
+					</div>
+				)
+			}
+		</section>
+	</div>
+</BaseLayout>
