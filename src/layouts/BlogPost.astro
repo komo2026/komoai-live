@@ -12,13 +12,13 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 <BaseLayout title={title} description={description} image={heroImage}>
 	<article class="wrap">
 		<header class="article-head">
-			<a class="back-link" href="/blog">← all posts</a>
-			<div class="meta" style="margin-top:18px;">
+			<a class="back-link" href="/blog">&lt;- all posts</a>
+			<div class="meta">
 				<FormattedDate date={pubDate} />
 				{
 					updatedDate && (
 						<>
-							{' · updated '}
+							{' / updated '}
 							<FormattedDate date={updatedDate} />
 						</>
 					)
@@ -34,7 +34,7 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 				)
 			}
 		</header>
-		<div class="prose" style="padding:28px 0 56px;">
+		<div class="prose" style="padding:34px 0 64px;">
 			<slot />
 		</div>
 	</article>

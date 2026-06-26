@@ -8,7 +8,10 @@ const isActive = (href: string) =>
 
 <header class="site">
 	<div class="wrap bar">
-		<a class="brand" href="/"><span class="b">komo</span>.sh</a>
+		<a class="brand" href="/" aria-label="komo.sh home">
+			<span class="brand-mark" aria-hidden="true">k</span>
+			<span>komo.sh</span>
+		</a>
 		<nav class="main" aria-label="Primary">
 			{
 				NAV_LINKS.map((link) => (
@@ -20,8 +23,8 @@ const isActive = (href: string) =>
 		</nav>
 		<div class="tools">
 			<button class="theme-toggle" id="themeBtn" aria-label="Toggle light/dark">
-				<span class="ico-sun" aria-hidden="true">☀</span>
-				<span class="ico-moon" aria-hidden="true">☾</span>
+				<span class="ico-sun" aria-hidden="true">sun</span>
+				<span class="ico-moon" aria-hidden="true">moon</span>
 			</button>
 		</div>
 	</div>

@@ -3,40 +3,48 @@ import { getCollection } from 'astro:content';
 import FormattedDate from '../../components/FormattedDate.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
-const posts = (await getCollection('blog')).sort(
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
 ---
 
-<BaseLayout title={`Blog · komo.sh`} description="Notes on small tools, AI agents, and the plumbing that keeps systems running.">
+<BaseLayout title="Blog / komo.sh" description="Notes on small tools, AI agents, and the plumbing that keeps systems running.">
 	<div class="wrap">
-		<section class="hero" style="padding:56px 0 28px;">
+		<section class="hero">
 			<div class="prompt"><span class="g">$</span> ls -t posts/</div>
-			<h1>Blog</h1>
-			<p class="sub">Build logs, agent experiments, and the boring 80% nobody demos.</p>
+			<h1 class="page-title">Blog</h1>
+			<p class="page-sub">Build logs, agent experiments, and the boring 80% nobody demos.</p>
 		</section>
 
 		<section class="blk" style="border-bottom:none;">
 			{
 				posts.length > 0 ? (
-					posts.map((post) => (
-						<a class="post" href={`/blog/${post.id}/`}>
-							<div class="top">
-								<h3>{post.data.title}</h3>
-								<span class="date">
-									<FormattedDate date={post.data.pubDate} />
-								</span>
-							</div>
-							<p>{post.data.description}</p>
-						</a>
-					))
+					<div class="post-list">
+						{posts.map((post) => (
+							<a class="post" href={`/blog/${post.id}/`}>
+								<div class="top">
+									<h3>{post.data.title}</h3>
+									<span class="date">
+										<FormattedDate date={post.data.pubDate} />
+									</span>
+								</div>
+								<p>{post.data.description}</p>
+							</a>
+						))}
+					</div>
 				) : (
 					<div class="empty">
-						<span class="g">$</span> find posts/ -name '*.md'
-						<br />
-						<span class="c"># 0 results. the archive is empty for now —</span>
-						<br />
-						<span class="c"># new posts will show up here as they ship.</span>
+						<h3>No published notes yet.</h3>
+						<p>
+							The content collection is wired and waiting for Markdown or MDX files in
+							<code>src/content/blog</code>.
+						</p>
+						<pre><span class="g">$</span> find src/content/blog -name &apos;*.md&apos; -o -name &apos;*.mdx&apos;
+# 0 results</pre>
+						<div class="empty-actions">
+							<a class="btn primary" href="/">Back home</a>
+							<a class="btn" href="/about">About komo</a>
+						</div>
 					</div>
 				)
 			}

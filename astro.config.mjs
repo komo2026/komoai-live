@@ -8,4 +8,7 @@ import { defineConfig } from 'astro/config';
 export default defineConfig({
 	site: 'https://komoai.live',
 	integrations: [mdx(), sitemap()],
+	devToolbar: {
+		enabled: false,
+	},
 });

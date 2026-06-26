@@ -15,7 +15,7 @@ export const AUTHOR = {
 	pronouns: 'he/him',
 	born: '2001-05-12',
 	edu: 'PhD Automation, HK PolyU',
-	bio: "I'm komo, a technologist working in automation — currently doing PhD research in the field at the Hong Kong Polytechnic University. Here I write up what I actually learn building tools, engineering AI agents, and keeping systems running, along with the workflows and habits that stick. The best is yet to come. We've only scratched the surface.",
+	bio: "I'm komo, a technologist working in automation - currently doing PhD research in the field at the Hong Kong Polytechnic University. Here I write up what I actually learn building tools, engineering AI agents, and keeping systems running, along with the workflows and habits that stick. The best is yet to come. We've only scratched the surface.",
 };
 
 // Primary navigation.

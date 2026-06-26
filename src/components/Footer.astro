@@ -6,7 +6,10 @@ const year = new Date().getFullYear();
 <footer class="site">
 	<div class="wrap">
 		<div class="foot">
-			<div class="brand"><span class="b">komo</span>.sh</div>
+			<div class="brand">
+				<span class="brand-mark" aria-hidden="true">k</span>
+				<span>komo.sh</span>
+			</div>
 			<nav class="socials" aria-label="Elsewhere">
 				{
 					SOCIAL_LINKS.map((s) => (
@@ -17,6 +20,6 @@ const year = new Date().getFullYear();
 				}
 			</nav>
 		</div>
-		<div class="colophon">© {year} komo · personal space</div>
+		<div class="colophon">&copy; {year} komo / personal space / built with Astro</div>
 	</div>
 </footer>
