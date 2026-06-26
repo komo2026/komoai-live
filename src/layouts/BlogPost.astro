@@ -1,15 +1,19 @@
 ---
-import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import FormattedDate from '../components/FormattedDate.astro';
 import BaseLayout from './BaseLayout.astro';
 
 type Props = CollectionEntry<'blog'>['data'];
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+const { title, description, pubDate, updatedDate, coverImage, seoTitle, seoDescription } =
+	Astro.props;
 ---
 
-<BaseLayout title={title} description={description} image={heroImage}>
+<BaseLayout
+	title={seoTitle ?? title}
+	description={seoDescription ?? description}
+	image={coverImage}
+>
 	<article class="wrap">
 		<header class="article-head">
 			<a class="back-link" href="/blog">&lt;- all posts</a>
@@ -27,9 +31,9 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 			<h1>{title}</h1>
 			{description && <p class="desc">{description}</p>}
 			{
-				heroImage && (
+				coverImage && (
 					<div class="hero-image">
-						<Image width={1020} height={510} src={heroImage} alt="" />
+						<img width={1020} height={510} src={coverImage} alt="" loading="eager" />
 					</div>
 				)
 			}

@@ -4,7 +4,26 @@ Personal developer blog for **komo**. Built with [Astro](https://astro.build).
 Design: calm indie-dev, e-ink warm (light) ↔ soft dark, monospace + green accents.
 
 - **Live:** https://komoai.live
-- **Stack:** Astro 7 · content collections (MDX) · RSS · sitemap · zero client JS except the theme toggle.
+- **Stack:** Astro 7 · **Hashnode (headless CMS) as the single content source** · RSS · sitemap · zero client JS except the theme toggle.
+
+## Content model (headless)
+
+Posts are **written in Hashnode** and pulled at **build time** over the Hashnode
+GraphQL API (`gql-beta.hashnode.com`, Bearer PAT). komoai.live is the only public
+front-end; Hashnode handles the editor, image hosting, drafts and scheduling.
+
+```
+Hashnode (write/publish)
+   └─ GraphQL  ──build-time──▶  Astro content loader (src/content.config.ts)
+                                   └─▶ komoai.live/blog/<slug>  (your domain, your front-end)
+   └─ Webhook (publish/update/delete) ──▶ Vercel Deploy Hook ──▶ rebuild
+```
+
+Build-time env (see `.env.example`): `HASHNODE_TOKEN` (required, Pro PAT) and
+optional `HASHNODE_PUBLICATION_HOST` (defaults to `komoai.live`). Set them as Vercel
+Project env vars for production builds; locally they come from `.env`. Without a
+token the site builds with an **empty** blog (graceful empty states) rather than
+failing.
 
 ## Develop
 
@@ -20,8 +39,7 @@ npm run preview  # preview the production build
 ```
 src/
 ├─ consts.ts              # site title, description, nav, socials, author info
-├─ content.config.ts      # blog collection schema (frontmatter)
-├─ content/blog/          # ← posts live here (one .md / .mdx per post). Empty for now.
+├─ content.config.ts      # Hashnode GraphQL loader + blog collection schema
 ├─ styles/global.css      # the whole design system (theme vars + components)
 ├─ components/            # BaseHead, Header (+ theme toggle), Footer, FormattedDate
 ├─ layouts/
@@ -35,25 +53,16 @@ src/
    └─ rss.xml.js          # RSS feed
 ```
 
-## Add a post
+## Publish a post
 
-Drop a Markdown/MDX file into `src/content/blog/`. The filename becomes the URL slug
-(`my-first-post.md` → `/blog/my-first-post/`). Frontmatter:
+Write and publish in **Hashnode** (set the slug, SEO title/description, cover image
+and tags there). On publish, the Hashnode webhook triggers a Vercel rebuild; the new
+build pulls the post via GraphQL and it appears at `/blog/<slug>/`. The Hashnode
+`slug` becomes the URL slug. The homepage, blog archive and RSS feed pick it up
+automatically; with no posts the site shows empty states instead.
 
-```mdx
----
-title: 'Most AI agent demos are a for-loop in a trench coat'
-description: 'The loop was never the hard part.'
-pubDate: 2026-06-20
-# updatedDate: 2026-06-25      # optional
-# heroImage: ./hero.jpg        # optional, relative to this file
----
-
-Your content here. Markdown + MDX components both work.
-```
-
-The homepage, blog archive, and RSS feed pick it up automatically. With no posts,
-the site shows empty states instead.
+To preview locally with real content, put a `HASHNODE_TOKEN` in `.env` and run
+`npm run build` / `npm run preview`.
 
 ## Theme
 
