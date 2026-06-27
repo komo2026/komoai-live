@@ -21,7 +21,7 @@ const posts = (await getCollection('blog')).sort(
 				posts.length > 0 ? (
 					<div class="post-list">
 						{posts.map((post) => (
-							<a class="post" href={`/blog/${post.id}/`}>
+							<a class="post" href={`/${post.id}/`}>
 								<div class="top">
 									<h3>{post.data.title}</h3>
 									<span class="date">

@@ -85,7 +85,7 @@ const recent = rest.slice(0, 5);
 			<div class="sec-head"><h2>Latest</h2></div>
 			{
 				featured ? (
-					<a class="feature" href={`/blog/${featured.id}/`}>
+					<a class="feature" href={`/${featured.id}/`}>
 						<div class="kicker">latest post</div>
 						<h3>{featured.data.title}</h3>
 						<p>{featured.data.description}</p>
@@ -120,7 +120,7 @@ const recent = rest.slice(0, 5);
 				recent.length > 0 ? (
 					<div class="post-list">
 						{recent.map((post) => (
-							<a class="post" href={`/blog/${post.id}/`}>
+							<a class="post" href={`/${post.id}/`}>
 								<div class="top">
 									<h3>{post.data.title}</h3>
 									<span class="date">
