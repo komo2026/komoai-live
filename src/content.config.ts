@@ -13,6 +13,15 @@ import { z } from 'astro/zod';
 // Note (2026-06): the live endpoint is gql-beta.hashnode.com; the old
 // gql.hashnode.com is deprecated (301s to an announcement page). GraphQL
 // read access is Pro-gated, so the token is required to fetch content.
+//
+// ⚠️  Stellate CDN cache: Hashnode's GraphQL API is fronted by Stellate.
+// Stellate tracks entities by their `id` field to invalidate cached queries
+// after mutations (publish/update/delete). If a query does NOT include `id`
+// on every entity (publication, posts.edges.node, tags), Stellate cannot
+// purge the stale response — new posts may not appear in the list for hours.
+// Hashnode engineers use an ESLint plugin (`require-id-when-available`)
+// internally to prevent this. Always include `id` on every entity you query.
+// Ref: Hashnode/support#86, dev.to/highcenburg Stale Cache Bug article.
 
 const HASHNODE_ENDPOINT = 'https://gql-beta.hashnode.com/';
 const PUBLICATION_HOST =
@@ -29,6 +38,7 @@ const POSTS_QUERY = `
 			posts(first: $first, after: $after) {
 				edges {
 					node {
+						id
 						slug
 						title
 						brief
@@ -36,7 +46,7 @@ const POSTS_QUERY = `
 						updatedAt
 						readTimeInMinutes
 						coverImage { url }
-						tags { name slug }
+						tags { id name slug }
 						seo { title description }
 						content { html }
 					}
@@ -63,20 +73,39 @@ function hashnodeLoader(): Loader {
 
 			let after: string | null = null;
 			let total = 0;
+			// Retry once on fetch failure (Stellate cache propagation can cause
+			// transient misses after publish). 2s backoff before retry.
+			const MAX_FETCH_RETRIES = 1;
 
 			try {
 				do {
-					const res = await fetch(HASHNODE_ENDPOINT, {
-						method: 'POST',
-						headers: {
-							'Content-Type': 'application/json',
-							Authorization: `Bearer ${HASHNODE_TOKEN}`,
-						},
-						body: JSON.stringify({
-							query: POSTS_QUERY,
-							variables: { host: PUBLICATION_HOST, first: 20, after },
-						}),
-					});
+					let res: Response | undefined;
+					let lastErr: Error | undefined;
+
+					for (let attempt = 0; attempt <= MAX_FETCH_RETRIES; attempt++) {
+						try {
+							res = await fetch(HASHNODE_ENDPOINT, {
+								method: 'POST',
+								headers: {
+									'Content-Type': 'application/json',
+									Authorization: `Bearer ${HASHNODE_TOKEN}`,
+								},
+								body: JSON.stringify({
+									query: POSTS_QUERY,
+									variables: { host: PUBLICATION_HOST, first: 20, after },
+								}),
+							});
+							break; // success — exit retry loop
+						} catch (err) {
+							lastErr = err as Error;
+							if (attempt < MAX_FETCH_RETRIES) {
+								logger.warn(`Hashnode fetch attempt ${attempt + 1} failed, retrying in 2s: ${lastErr.message}`);
+								await new Promise(r => setTimeout(r, 2000));
+							}
+						}
+					}
+
+					if (!res) throw lastErr ?? new Error('Hashnode fetch failed after retries');
 
 					if (!res.ok) {
 						throw new Error(`Hashnode API responded ${res.status} ${res.statusText}`);
@@ -95,6 +124,9 @@ function hashnodeLoader(): Loader {
 					const connection = publication.posts;
 					for (const edge of connection.edges) {
 						const node = edge.node;
+						// coverImage.url can be "" (empty string) from Hashnode when no
+						// cover image is set. Use || (not ??) to catch both null and "".
+						const coverUrl = node.coverImage?.url || undefined;
 						const data = await parseData({
 							id: node.slug,
 							data: {
@@ -102,7 +134,7 @@ function hashnodeLoader(): Loader {
 								description: node.brief ?? '',
 								pubDate: node.publishedAt,
 								updatedDate: node.updatedAt ?? undefined,
-								coverImage: node.coverImage?.url || undefined,
+								coverImage: coverUrl,
 								tags: (node.tags ?? []).map((t: { name: string }) => t.name),
 								readingTime: node.readTimeInMinutes ?? undefined,
 								seoTitle: node.seo?.title ?? undefined,
