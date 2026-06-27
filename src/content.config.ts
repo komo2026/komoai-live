@@ -102,7 +102,7 @@ function hashnodeLoader(): Loader {
 								description: node.brief ?? '',
 								pubDate: node.publishedAt,
 								updatedDate: node.updatedAt ?? undefined,
-								coverImage: node.coverImage?.url ?? undefined,
+								coverImage: node.coverImage?.url || undefined,
 								tags: (node.tags ?? []).map((t: { name: string }) => t.name),
 								readingTime: node.readTimeInMinutes ?? undefined,
 								seoTitle: node.seo?.title ?? undefined,
