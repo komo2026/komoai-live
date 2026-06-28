@@ -17,7 +17,7 @@ const recent = rest.slice(0, 5);
 			<div class="hero-grid">
 				<div class="hero-copy">
 					<div class="prompt"><span class="g">$</span> whoami<span class="cursor" aria-hidden="true"></span></div>
-					<h1>Komo&apos;s personal space</h1>
+					<h1>Miles Arden&apos;s personal space</h1>
 					<p class="sub">&ldquo;{QUOTE}&rdquo;</p>
 					<div class="cta">
 						<a class="btn primary" href="/blog">Read the blog</a>
@@ -34,7 +34,7 @@ const recent = rest.slice(0, 5);
 					<div class="panel-inner">
 						<div class="panel-top">
 							<div class="lights" aria-hidden="true"><span></span><span></span><span></span></div>
-							<span>komo@live:~/notes</span>
+							<span>miles@live:~/notes</span>
 						</div>
 						<div class="terminal-lines" aria-hidden="true">
 							<div><span class="g">$</span> cat principles.txt</div>
@@ -148,6 +148,28 @@ const recent = rest.slice(0, 5);
 					</div>
 				)
 			}
+		</section>
+
+		<section class="blk" id="tools">
+			<div class="sec-head"><h2>Tools</h2></div>
+			<p style="max-width:62ch;margin:0 0 22px;color:var(--muted);font-size:0.97rem;">
+				Not sponsorships - just software that earns a place in the workflow and then
+				stays out of the way.
+			</p>
+			<a class="feature" href="https://kolmopdf.com" target="_blank" rel="noopener">
+				<div class="kicker">utility / pdf -&gt; markdown</div>
+				<h3>KolmoPDF</h3>
+				<p>
+					Most of what I automate starts by getting clean text out of a PDF, and ordinary
+					parsers fall apart the moment a page has two columns, a formula, or a table
+					that runs across the page break. KolmoPDF is the one I reach for: VLM-based
+					parsing that keeps formulas, tables, code blocks, and multi-column order
+					intact, layout-preserving translation when the source isn&apos;t in English, and
+					an API clean enough to wire straight into an agent or a knowledge base. It runs
+					the other direction too - Markdown back out to DOCX, HTML, LaTeX, or PDF.
+				</p>
+				<div class="meta">kolmopdf.com -&gt;</div>
+			</a>
 		</section>
 	</div>
 </BaseLayout>
