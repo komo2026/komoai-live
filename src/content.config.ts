@@ -25,8 +25,8 @@ import { z } from 'astro/zod';
 
 const HASHNODE_ENDPOINT = 'https://gql-beta.hashnode.com/';
 const PUBLICATION_HOST =
-	import.meta.env.HASHNODE_PUBLICATION_HOST ??
-	process.env.HASHNODE_PUBLICATION_HOST ??
+	import.meta.env.HASHNODE_PUBLICATION_HOST ||
+	process.env.HASHNODE_PUBLICATION_HOST ||
 	'komoai.live';
 const HASHNODE_TOKEN =
 	import.meta.env.HASHNODE_TOKEN ?? process.env.HASHNODE_TOKEN;
@@ -73,18 +73,18 @@ function hashnodeLoader(): Loader {
 
 			let after: string | null = null;
 			let total = 0;
-			// Retry once on fetch failure (Stellate cache propagation can cause
-			// transient misses after publish). 2s backoff before retry.
-			const MAX_FETCH_RETRIES = 1;
+			// Retry the whole request on transient failure (network / HTTP 5xx /
+			// GraphQL error) — Stellate can miss right after a publish. 2s backoff.
+			const MAX_FETCH_RETRIES = 2;
 
 			try {
 				do {
-					let res: Response | undefined;
+					let json: any;
 					let lastErr: Error | undefined;
 
 					for (let attempt = 0; attempt <= MAX_FETCH_RETRIES; attempt++) {
 						try {
-							res = await fetch(HASHNODE_ENDPOINT, {
+							const res = await fetch(HASHNODE_ENDPOINT, {
 								method: 'POST',
 								headers: {
 									'Content-Type': 'application/json',
@@ -95,26 +95,25 @@ function hashnodeLoader(): Loader {
 									variables: { host: PUBLICATION_HOST, first: 20, after },
 								}),
 							});
+							if (!res.ok) {
+								throw new Error(`Hashnode API responded ${res.status} ${res.statusText}`);
+							}
+							const body = await res.json();
+							if (body.errors) {
+								throw new Error(`Hashnode GraphQL errors: ${JSON.stringify(body.errors)}`);
+							}
+							json = body;
 							break; // success — exit retry loop
 						} catch (err) {
 							lastErr = err as Error;
 							if (attempt < MAX_FETCH_RETRIES) {
-								logger.warn(`Hashnode fetch attempt ${attempt + 1} failed, retrying in 2s: ${lastErr.message}`);
+								logger.warn(`Hashnode request attempt ${attempt + 1} failed, retrying in 2s: ${lastErr.message}`);
 								await new Promise(r => setTimeout(r, 2000));
 							}
 						}
 					}
 
-					if (!res) throw lastErr ?? new Error('Hashnode fetch failed after retries');
-
-					if (!res.ok) {
-						throw new Error(`Hashnode API responded ${res.status} ${res.statusText}`);
-					}
-
-					const json = await res.json();
-					if (json.errors) {
-						throw new Error(`Hashnode GraphQL errors: ${JSON.stringify(json.errors)}`);
-					}
+					if (!json) throw lastErr ?? new Error('Hashnode request failed after retries');
 
 					const publication = json.data?.publication;
 					if (!publication) {

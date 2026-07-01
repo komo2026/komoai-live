@@ -15,7 +15,7 @@ front-end; Hashnode handles the editor, image hosting, drafts and scheduling.
 ```
 Hashnode (write/publish)
    └─ GraphQL  ──build-time──▶  Astro content loader (src/content.config.ts)
-                                   └─▶ komoai.live/blog/<slug>  (your domain, your front-end)
+                                   └─▶ komoai.live/<slug>  (your domain, your front-end)
    └─ Webhook (publish/update/delete) ──▶ Vercel Deploy Hook ──▶ rebuild
 ```
 
@@ -49,7 +49,7 @@ src/
    ├─ index.astro         # homepage (hero · whoami · latest · blog)
    ├─ about.astro         # About
    ├─ blog/index.astro    # blog archive
-   ├─ blog/[...slug].astro# renders each post
+   ├─ [...slug].astro     # renders each post (root-level → /<slug>/)
    └─ rss.xml.js          # RSS feed
 ```
 
@@ -57,7 +57,7 @@ src/
 
 Write and publish in **Hashnode** (set the slug, SEO title/description, cover image
 and tags there). On publish, the Hashnode webhook triggers a Vercel rebuild; the new
-build pulls the post via GraphQL and it appears at `/blog/<slug>/`. The Hashnode
+build pulls the post via GraphQL and it appears at `/<slug>/`. The Hashnode
 `slug` becomes the URL slug. The homepage, blog archive and RSS feed pick it up
 automatically; with no posts the site shows empty states instead.
 
