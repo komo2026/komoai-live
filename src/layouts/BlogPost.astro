@@ -1,12 +1,22 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import FormattedDate from '../components/FormattedDate.astro';
+import { AUTHOR, TAGLINE, TOOLS } from '../consts';
 import BaseLayout from './BaseLayout.astro';
 
 type Props = CollectionEntry<'blog'>['data'];
 
-const { title, description, pubDate, updatedDate, coverImage, seoTitle, seoDescription } =
-	Astro.props;
+const {
+	title,
+	description,
+	pubDate,
+	updatedDate,
+	coverImage,
+	tags,
+	readingTime,
+	seoTitle,
+	seoDescription,
+} = Astro.props;
 ---
 
 <BaseLayout
@@ -14,16 +24,27 @@ const { title, description, pubDate, updatedDate, coverImage, seoTitle, seoDescr
 	description={seoDescription ?? description}
 	image={coverImage}
 >
-	<article class="wrap">
+	<div class="read-progress" id="readProgress" aria-hidden="true"></div>
+
+	<article class="wrap article">
 		<header class="article-head">
 			<a class="back-link" href="/blog">&lt;- all posts</a>
-			<div class="meta">
+			<div class="meta article-meta">
 				<FormattedDate date={pubDate} />
 				{
 					updatedDate && (
 						<>
-							{' / updated '}
+							<span class="dot" aria-hidden="true">&middot;</span>
+							{'updated '}
 							<FormattedDate date={updatedDate} />
+						</>
+					)
+				}
+				{
+					readingTime && (
+						<>
+							<span class="dot" aria-hidden="true">&middot;</span>
+							<span>{readingTime} min read</span>
 						</>
 					)
 				}
@@ -31,15 +52,85 @@ const { title, description, pubDate, updatedDate, coverImage, seoTitle, seoDescr
 			<h1>{title}</h1>
 			{description && <p class="desc">{description}</p>}
 			{
+				tags && tags.length > 0 && (
+					<ul class="article-tags" aria-label="Tags">
+						{tags.map((tag) => (
+							<li>{tag}</li>
+						))}
+					</ul>
+				)
+			}
+			{
 				coverImage && (
 					<div class="hero-image">
-						<img width={1020} height={510} src={coverImage} alt="" loading="eager" />
+						<img
+							width={1020}
+							height={510}
+							src={coverImage}
+							alt=""
+							loading="eager"
+							fetchpriority="high"
+						/>
 					</div>
 				)
 			}
 		</header>
-		<div class="prose" style="padding:34px 0 64px;">
-			<slot />
+
+		<div class="article-body">
+			<div class="prose">
+				<slot />
+
+				<footer class="article-foot">
+					<div class="foot-author">
+						<span class="foot-mark" aria-hidden="true">k</span>
+						<div>
+							<div class="foot-name">Written by {AUTHOR.name}</div>
+							<p>
+								{TAGLINE} — <a href="/about">more about me</a>.
+							</p>
+						</div>
+					</div>
+					<a class="btn" href="/blog">&lt;- all posts</a>
+				</footer>
+			</div>
+
+			<aside class="post-aside" aria-label="Recommended tools">
+				<div class="aside-inner">
+					<div class="aside-card">
+						<div class="kicker">tools I actually use</div>
+						{
+							TOOLS.map((tool) => (
+								<a class="tool-rec" href={tool.href} target="_blank" rel="noopener">
+									<div class="tool-rec-top">
+										<span class="tool-name">{tool.name}</span>
+										<span class="tool-tag">{tool.kicker}</span>
+									</div>
+									<p>{tool.blurb}</p>
+									<span class="tool-link">{tool.host} -&gt;</span>
+								</a>
+							))
+						}
+					</div>
+					<a class="aside-home" href="/#tools">see all tools -&gt;</a>
+				</div>
+			</aside>
 		</div>
 	</article>
+
+	<script is:inline>
+		(function () {
+			var bar = document.getElementById('readProgress');
+			if (!bar) return;
+			function update() {
+				var el = document.documentElement;
+				var max = el.scrollHeight - el.clientHeight;
+				var scrolled = el.scrollTop || document.body.scrollTop;
+				var ratio = max > 0 ? scrolled / max : 0;
+				bar.style.transform = 'scaleX(' + ratio.toFixed(4) + ')';
+			}
+			addEventListener('scroll', update, { passive: true });
+			addEventListener('resize', update);
+			update();
+		})();
+	</script>
 </BaseLayout>

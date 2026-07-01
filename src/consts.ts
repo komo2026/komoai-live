@@ -28,6 +28,19 @@ export const NAV_LINKS = [
 export const SOCIAL_LINKS = [
 	{ label: 'X', href: 'https://x.com/komobuilds' },
 	{ label: 'Bluesky', href: 'https://bsky.app/profile/komoai.net' },
-	{ label: 'Reddit', href: 'https://www.reddit.com/user/komo_build/' },
 	{ label: 'YouTube', href: 'https://www.youtube.com/channel/UCHIB3rEdXqRDERY7qKehgpg' },
+];
+
+// Recommended tools. Single source of truth for both the homepage "Tools"
+// section and the per-post sidebar (see BlogPost.astro), so every blog page
+// carries the outbound link automatically — no manual authoring per post.
+export const TOOLS = [
+	{
+		name: 'KolmoPDF',
+		kicker: 'pdf -> markdown',
+		href: 'https://kolmopdf.com',
+		host: 'kolmopdf.com',
+		blurb:
+			'VLM-based PDF parsing that keeps formulas, tables, code blocks, and multi-column order intact — clean text you can wire straight into an agent or knowledge base.',
+	},
 ];

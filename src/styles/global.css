@@ -760,6 +760,21 @@ section.blk {
 	line-height: 1.55;
 }
 
+/* Reading progress */
+.read-progress {
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 40;
+	width: 100%;
+	height: 3px;
+	transform: scaleX(0);
+	transform-origin: 0 50%;
+	background: linear-gradient(90deg, var(--accent), var(--accent-2));
+	transition: transform 90ms linear;
+	will-change: transform;
+}
+
 /* Article / prose */
 .article-head {
 	padding: 54px 0 16px;
@@ -767,6 +782,37 @@ section.blk {
 
 .article-head .meta {
 	margin: 18px 0 12px;
+}
+
+.article-meta {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 3px 6px;
+}
+
+.article-meta .dot {
+	color: var(--rule-2);
+}
+
+.article-tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin: 20px 0 0;
+	padding: 0;
+	list-style: none;
+}
+
+.article-tags li {
+	padding: 4px 11px;
+	border: 1px solid var(--rule-2);
+	border-radius: 999px;
+	background: var(--accent-soft);
+	color: var(--accent);
+	font-family: var(--mono);
+	font-size: 0.72rem;
+	letter-spacing: 0.01em;
 }
 
 .article-head h1 {
@@ -895,6 +941,170 @@ section.blk {
 
 .prose a {
 	text-decoration: underline;
+	text-decoration-color: color-mix(in srgb, var(--accent) 45%, transparent);
+}
+
+.prose a:hover {
+	text-decoration-color: var(--accent);
+}
+
+/* Lead paragraph — sets an editorial tone for the opening line. */
+.prose > p:first-of-type {
+	color: var(--ink);
+	font-size: 1.18rem;
+	line-height: 1.62;
+}
+
+/* Article layout: content + sticky sidebar */
+.article-body {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 288px;
+	gap: clamp(30px, 5vw, 60px);
+	align-items: start;
+	padding: 34px 0 68px;
+}
+
+.article-body .prose {
+	padding: 0;
+}
+
+.post-aside {
+	position: sticky;
+	top: 96px;
+}
+
+.aside-inner {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+}
+
+.aside-card {
+	padding: 18px;
+	border: 1px solid var(--rule-2);
+	border-radius: var(--radius);
+	background: color-mix(in srgb, var(--bg-2) 88%, transparent);
+}
+
+.aside-card .kicker {
+	display: block;
+	margin-bottom: 14px;
+	color: var(--accent);
+}
+
+.tool-rec {
+	display: block;
+	padding: 15px;
+	border: 1px solid var(--rule);
+	border-radius: var(--radius);
+	background: var(--bg);
+	color: inherit;
+	transition:
+		transform var(--ease),
+		border-color var(--ease),
+		box-shadow var(--ease);
+}
+
+.tool-rec:hover {
+	transform: translateY(-2px);
+	border-color: var(--accent);
+	box-shadow: var(--shadow);
+	text-decoration: none;
+}
+
+.tool-rec + .tool-rec {
+	margin-top: 12px;
+}
+
+.tool-rec-top {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 10px;
+	margin-bottom: 8px;
+}
+
+.tool-name {
+	color: var(--ink);
+	font-family: var(--serif);
+	font-size: 1.24rem;
+	font-weight: 700;
+	letter-spacing: -0.02em;
+}
+
+.tool-tag {
+	color: var(--faint);
+	font-family: var(--mono);
+	font-size: 0.68rem;
+	white-space: nowrap;
+}
+
+.tool-rec p {
+	margin: 0 0 12px;
+	color: var(--muted);
+	font-size: 0.9rem;
+	line-height: 1.55;
+}
+
+.tool-link {
+	color: var(--accent);
+	font-family: var(--mono);
+	font-size: 0.76rem;
+	font-weight: 700;
+}
+
+.aside-home {
+	color: var(--muted);
+	font-family: var(--mono);
+	font-size: 0.76rem;
+}
+
+.aside-home:hover {
+	color: var(--accent);
+}
+
+/* Article footer */
+.article-foot {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 18px 24px;
+	flex-wrap: wrap;
+	margin-top: 52px;
+	padding-top: 26px;
+	border-top: 1px solid var(--rule);
+}
+
+.foot-author {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+}
+
+.foot-mark {
+	display: grid;
+	place-items: center;
+	flex-shrink: 0;
+	width: 42px;
+	height: 42px;
+	border: 1px solid var(--rule-2);
+	border-radius: 50%;
+	background: var(--bg-2);
+	color: var(--accent);
+	font-family: var(--mono);
+	font-weight: 800;
+	box-shadow: inset 0 0 0 4px var(--accent-soft);
+}
+
+.foot-name {
+	color: var(--ink);
+	font-weight: 700;
+}
+
+.foot-author p {
+	margin: 2px 0 0;
+	color: var(--muted);
+	font-size: 0.92rem;
 }
 
 /* Footer */
@@ -940,6 +1150,11 @@ footer.site {
 	font-size: 0.76rem;
 }
 
+/* Keep anchored headings clear of the sticky header. */
+.prose :is(h2, h3, h4) {
+	scroll-margin-top: 92px;
+}
+
 @media (max-width: 860px) {
 	.hero-grid,
 	.identity-grid,
@@ -953,6 +1168,21 @@ footer.site {
 
 	.topics {
 		grid-template-columns: 1fr;
+	}
+
+	.article-body {
+		grid-template-columns: 1fr;
+		gap: 40px;
+	}
+
+	.post-aside {
+		position: static;
+		top: auto;
+		order: 2;
+	}
+
+	.aside-card {
+		max-width: 560px;
 	}
 }
 
