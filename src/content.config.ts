@@ -157,9 +157,10 @@ function hashnodeLoader(): Loader {
 
 				logger.info(`Loaded ${total} post(s) from Hashnode (${PUBLICATION_HOST}).`);
 			} catch (err) {
-				// Never crash the build on a CMS hiccup: ship what we have (possibly
-				// empty) and surface the error in the build log.
+				// On a real CMS error, FAIL the build so Vercel keeps the last good deploy
+				// (a genuinely empty publication returns 0 posts with no error and still builds).
 				logger.error(`Hashnode load failed: ${(err as Error).message}`);
+				throw err;
 			}
 		},
 	};
