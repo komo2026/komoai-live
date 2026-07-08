@@ -26,7 +26,6 @@ export const NAV_LINKS = [
 
 // Social links shown in the footer.
 export const SOCIAL_LINKS = [
-	{ label: 'X', href: 'https://x.com/komobuilds' },
 	{ label: 'Bluesky', href: 'https://bsky.app/profile/komoai.net' },
 	{ label: 'YouTube', href: 'https://www.youtube.com/channel/UCHIB3rEdXqRDERY7qKehgpg' },
 ];
