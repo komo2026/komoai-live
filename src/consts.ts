@@ -11,11 +11,11 @@ export const QUOTE =
 
 // About / whoami.
 export const AUTHOR = {
-	name: 'Ellis Grant',
+	name: 'Ryan Swartzberg',
 	pronouns: 'he/him',
 	born: '2001-05-12',
 	edu: 'PhD Automation, HK PolyU',
-	bio: "I'm Ellis Grant, a technologist working in automation - currently doing PhD research in the field at the Hong Kong Polytechnic University. Here I write up what I actually learn building tools, engineering AI agents, and keeping systems running, along with the workflows and habits that stick. The best is yet to come. We've only scratched the surface.",
+	bio: "I'm Ryan Swartzberg, a technologist working in automation - currently doing PhD research in the field at the Hong Kong Polytechnic University. Here I write up what I actually learn building tools, engineering AI agents, and keeping systems running, along with the workflows and habits that stick. The best is yet to come. We've only scratched the surface.",
 };
 
 // Primary navigation.
@@ -26,7 +26,7 @@ export const NAV_LINKS = [
 
 // Social links shown in the footer.
 export const SOCIAL_LINKS = [
-	{ label: 'X', href: 'https://x.com/EllisGrant2001' },
+	{ label: 'X', href: 'https://x.com/swartzberg_ryan' },
 	{ label: 'Bluesky', href: 'https://bsky.app/profile/komoai.net' },
 	{ label: 'YouTube', href: 'https://www.youtube.com/channel/UCHIB3rEdXqRDERY7qKehgpg' },
 ];
