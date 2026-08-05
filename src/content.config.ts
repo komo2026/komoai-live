@@ -13,8 +13,7 @@ import { z } from 'astro/zod';
 // Optional:
 //   HASHNODE_PUBLICATION_ID     stable publication id (preferred).
 //   HASHNODE_PUBLICATION_HOST   Hashnode host metadata for GraphQL lookup when
-//                               id is unset. Defaults to komoai.live until the
-//                               Hashnode dashboard custom domain is switched.
+//                               id is unset. Defaults to reidmarlow.com.
 // Note (2026-06): the live endpoint is gql-beta.hashnode.com; the old
 // gql.hashnode.com is deprecated (301s to an announcement page). GraphQL
 // read access is Pro-gated, so the token is required to fetch content.
@@ -34,12 +33,11 @@ const PUBLICATION_ID =
 	process.env.HASHNODE_PUBLICATION_ID ||
 	'';
 // Hashnode "host" is CMS metadata for GraphQL lookup — independent of the
-// public Vercel domain (reidmarlow.com). Keep until the Hashnode dashboard
-// custom domain is updated, then set HASHNODE_PUBLICATION_HOST=reidmarlow.com.
+// public Vercel domain (reidmarlow.com). Hashnode custom domain is reidmarlow.com.
 const PUBLICATION_HOST =
 	import.meta.env.HASHNODE_PUBLICATION_HOST ||
 	process.env.HASHNODE_PUBLICATION_HOST ||
-	'komoai.live';
+	'reidmarlow.com';
 const HASHNODE_TOKEN =
 	import.meta.env.HASHNODE_TOKEN ?? process.env.HASHNODE_TOKEN;
 

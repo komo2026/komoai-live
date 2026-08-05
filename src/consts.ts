@@ -7,7 +7,9 @@ export const SITE_DESCRIPTION =
 // Hero / brand tagline shown on the homepage.
 export const TAGLINE = 'ship small. overengineer nothing.';
 export const QUOTE =
-	'I visualize a time when we will be to robots what dogs are to humans. And I am rooting for the machines.';
+	'We may have knowledge of the past but cannot control it; we may control the future but have no knowledge of it.';
+export const PRINCIPLES =
+	'Three passions, simple but overwhelmingly strong, have governed my life: the longing for love, the search for knowledge, and unbearable pity for the suffering of mankind.';
 
 // About / whoami.
 export const AUTHOR = {

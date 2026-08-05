@@ -3,7 +3,7 @@ import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import portrait from '../assets/reid-marlow.jpg';
 import FormattedDate from '../components/FormattedDate.astro';
-import { AUTHOR, QUOTE, SITE_DESCRIPTION, SITE_TITLE, TAGLINE } from '../consts';
+import { AUTHOR, PRINCIPLES, QUOTE, SITE_DESCRIPTION, SITE_TITLE, TAGLINE } from '../consts';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 const posts = (await getCollection('blog')).sort(
@@ -32,17 +32,15 @@ const recent = rest.slice(0, 5);
 					</div>
 				</div>
 
-				<aside class="hero-panel" aria-label="Site dispatch">
+				<aside class="hero-panel" aria-label="Portrait and notes">
 					<div class="panel-inner">
 						<div class="panel-top">
 							<div class="lights" aria-hidden="true"><span></span><span></span><span></span></div>
 							<span>reid@home:~/notes</span>
 						</div>
-						<div class="terminal-lines" aria-hidden="true">
+						<div class="terminal-lines">
 							<div><span class="g">$</span> cat principles.txt</div>
-							<div class="cmd">ship small</div>
-							<div class="cmd">overengineer nothing</div>
-							<div class="cmd">write down what survived production</div>
+							<div class="cmd principle-quote">&ldquo;{PRINCIPLES}&rdquo;</div>
 						</div>
 						<figure class="hero-shot">
 							<Image
@@ -56,15 +54,6 @@ const recent = rest.slice(0, 5);
 							/>
 							<figcaption class="hero-shot-cap">~/portrait · field notes</figcaption>
 						</figure>
-						<div class="dispatch-card">
-							<div class="kicker">current dispatch</div>
-							<h2>{featured ? featured.data.title : TAGLINE}</h2>
-							<p>
-								{featured
-									? featured.data.description
-									: 'The archive is warming up. New build logs and agent notes will land here.'}
-							</p>
-						</div>
 					</div>
 				</aside>
 			</div>

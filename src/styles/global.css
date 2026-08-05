@@ -478,6 +478,13 @@ nav.main a.active {
 	color: var(--terminal-ink);
 }
 
+.terminal-lines .principle-quote {
+	margin-top: 4px;
+	white-space: normal;
+	line-height: 1.55;
+	color: var(--terminal-ink);
+}
+
 .dispatch-card {
 	padding: 16px 0 0;
 	border-top: 1px solid var(--terminal-rule);
