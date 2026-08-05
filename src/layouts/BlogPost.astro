@@ -1,5 +1,7 @@
 ---
+import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
+import portrait from '../assets/reid-marlow.jpg';
 import FormattedDate from '../components/FormattedDate.astro';
 import { AUTHOR, TAGLINE, TOOLS } from '../consts';
 import BaseLayout from './BaseLayout.astro';
@@ -82,7 +84,15 @@ const {
 
 				<footer class="article-foot">
 					<div class="foot-author">
-						<span class="foot-mark" aria-hidden="true">k</span>
+						<Image
+							class="foot-avatar"
+							src={portrait}
+							alt=""
+							width={84}
+							height={84}
+							quality={78}
+							loading="lazy"
+						/>
 						<div>
 							<div class="foot-name">Written by {AUTHOR.name}</div>
 							<p>

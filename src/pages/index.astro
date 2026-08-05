@@ -1,5 +1,7 @@
 ---
+import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
+import portrait from '../assets/reid-marlow.jpg';
 import FormattedDate from '../components/FormattedDate.astro';
 import { AUTHOR, QUOTE, SITE_DESCRIPTION, SITE_TITLE, TAGLINE } from '../consts';
 import BaseLayout from '../layouts/BaseLayout.astro';
@@ -11,7 +13,7 @@ const [featured, ...rest] = posts;
 const recent = rest.slice(0, 5);
 ---
 
-<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
+<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION} image={portrait}>
 	<div class="wrap">
 		<section class="hero">
 			<div class="hero-grid">
@@ -34,7 +36,7 @@ const recent = rest.slice(0, 5);
 					<div class="panel-inner">
 						<div class="panel-top">
 							<div class="lights" aria-hidden="true"><span></span><span></span><span></span></div>
-							<span>miles@live:~/notes</span>
+							<span>reid@live:~/notes</span>
 						</div>
 						<div class="terminal-lines" aria-hidden="true">
 							<div><span class="g">$</span> cat principles.txt</div>
@@ -42,6 +44,18 @@ const recent = rest.slice(0, 5);
 							<div class="cmd">overengineer nothing</div>
 							<div class="cmd">write down what survived production</div>
 						</div>
+						<figure class="hero-shot">
+							<Image
+								src={portrait}
+								alt={`${AUTHOR.name} at a desk with a notebook and laptop`}
+								widths={[320, 480, 640, 960]}
+								sizes="(max-width: 860px) 90vw, 360px"
+								quality={82}
+								loading="eager"
+								fetchpriority="high"
+							/>
+							<figcaption class="hero-shot-cap">~/portrait · field notes</figcaption>
+						</figure>
 						<div class="dispatch-card">
 							<div class="kicker">current dispatch</div>
 							<h2>{featured ? featured.data.title : TAGLINE}</h2>
@@ -58,7 +72,7 @@ const recent = rest.slice(0, 5);
 
 		<section class="blk about" id="about">
 			<div class="sec-head"><h2>whoami</h2></div>
-			<div class="identity-grid">
+			<div class="identity-grid with-portrait">
 				<div>
 					<p>{AUTHOR.bio}</p>
 					<p class="dim">
@@ -66,6 +80,20 @@ const recent = rest.slice(0, 5);
 						retries, and deciding which agent workflows are worth keeping.
 					</p>
 				</div>
+				<figure class="portrait-card">
+					<Image
+						src={portrait}
+						alt={`${AUTHOR.name}, portrait`}
+						widths={[320, 480, 640]}
+						sizes="(max-width: 860px) 70vw, 260px"
+						quality={80}
+						loading="lazy"
+					/>
+					<figcaption class="portrait-meta">
+						<span class="status">online</span>
+						<span class="loc">hk · field desk</span>
+					</figcaption>
+				</figure>
 				<div class="about-card">
 					<dl>
 						<dt>born</dt>

@@ -1,4 +1,6 @@
 ---
+import { Image } from 'astro:assets';
+import portrait from '../assets/reid-marlow.jpg';
 import { AUTHOR, SOCIAL_LINKS, TAGLINE } from '../consts';
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
@@ -6,26 +8,42 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 <BaseLayout
 	title="About / komo.sh"
 	description="Reid Marlow - a technologist working in automation. Small sharp tools, AI agents, and the boring plumbing that makes them work."
+	image={portrait}
 >
 	<div class="wrap">
 		<section class="hero">
-			<div class="hero-grid">
+			<div class="about-hero-grid">
+				<figure class="portrait-card">
+					<Image
+						src={portrait}
+						alt={`${AUTHOR.name} at a desk with a notebook and laptop`}
+						widths={[320, 480, 640, 960]}
+						sizes="(max-width: 860px) 88vw, 360px"
+						quality={84}
+						loading="eager"
+						fetchpriority="high"
+					/>
+					<figcaption class="portrait-meta">
+						<span class="status">reid@live</span>
+						<span class="loc">desk · notebook · build</span>
+					</figcaption>
+				</figure>
 				<div>
 					<div class="prompt"><span class="g">$</span> cat about.md</div>
 					<h1 class="page-title">whoami</h1>
 					<p class="page-sub">{TAGLINE}</p>
-				</div>
-				<div class="about-card">
-					<dl>
-						<dt>name</dt>
-						<dd>{AUTHOR.name}</dd>
-						<dt>born</dt>
-						<dd>{AUTHOR.born}</dd>
-						<dt>edu</dt>
-						<dd>{AUTHOR.edu}</dd>
-						<dt>pronouns</dt>
-						<dd>{AUTHOR.pronouns}</dd>
-					</dl>
+					<div class="about-card" style="margin-top: 24px;">
+						<dl>
+							<dt>name</dt>
+							<dd>{AUTHOR.name}</dd>
+							<dt>born</dt>
+							<dd>{AUTHOR.born}</dd>
+							<dt>edu</dt>
+							<dd>{AUTHOR.edu}</dd>
+							<dt>pronouns</dt>
+							<dd>{AUTHOR.pronouns}</dd>
+						</dl>
+					</div>
 				</div>
 			</div>
 		</section>

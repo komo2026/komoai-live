@@ -502,6 +502,142 @@ nav.main a.active {
 	color: color-mix(in srgb, var(--terminal-muted) 88%, var(--accent));
 }
 
+/* Portrait inside the terminal-chrome panel (homepage hero) */
+.hero-shot {
+	position: relative;
+	margin: 16px 0 0;
+	overflow: hidden;
+	border: 1px solid color-mix(in srgb, var(--terminal-rule) 70%, var(--accent));
+	border-radius: calc(var(--radius) - 2px);
+	background: #0a0d0b;
+	aspect-ratio: 4 / 5;
+}
+
+.hero-shot img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	object-position: 58% 18%;
+	filter: saturate(0.9) contrast(1.03);
+	transition: transform 420ms ease, filter 420ms ease;
+}
+
+.hero-panel:hover .hero-shot img {
+	transform: scale(1.02);
+	filter: saturate(0.95) contrast(1.04);
+}
+
+.hero-shot::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+	background:
+		linear-gradient(180deg, transparent 52%, rgba(8, 12, 9, 0.55) 100%),
+		linear-gradient(135deg, rgba(104, 212, 138, 0.08), transparent 42%);
+	mix-blend-mode: multiply;
+}
+
+:root[data-theme='dark'] .hero-shot::after {
+	background:
+		linear-gradient(180deg, transparent 48%, rgba(8, 12, 9, 0.62) 100%),
+		linear-gradient(135deg, rgba(104, 212, 138, 0.1), transparent 42%);
+	mix-blend-mode: normal;
+}
+
+.hero-shot-cap {
+	position: absolute;
+	left: 12px;
+	right: 12px;
+	bottom: 10px;
+	z-index: 1;
+	margin: 0;
+	color: color-mix(in srgb, var(--terminal-ink) 92%, var(--accent));
+	font-family: var(--mono);
+	font-size: 0.7rem;
+	letter-spacing: 0.04em;
+	text-transform: lowercase;
+	text-shadow: 0 1px 8px rgba(0, 0, 0, 0.45);
+}
+
+/* Editorial portrait card (about / whoami) */
+.portrait-card {
+	position: relative;
+	overflow: hidden;
+	border: 1px solid var(--rule-2);
+	border-radius: var(--radius);
+	background: var(--bg-2);
+	box-shadow: var(--shadow);
+	aspect-ratio: 4 / 5;
+}
+
+.portrait-card img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	object-position: 58% 18%;
+	filter: saturate(0.92) contrast(1.02);
+}
+
+.portrait-card::before {
+	content: '';
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	pointer-events: none;
+	box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 18%, transparent);
+}
+
+.portrait-card::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	pointer-events: none;
+	background:
+		linear-gradient(180deg, transparent 62%, color-mix(in srgb, var(--bg) 55%, transparent) 100%),
+		radial-gradient(circle at 12% 8%, var(--accent-soft), transparent 42%);
+}
+
+.portrait-meta {
+	position: absolute;
+	left: 14px;
+	right: 14px;
+	bottom: 12px;
+	z-index: 2;
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 10px;
+	color: var(--ink);
+	font-family: var(--mono);
+	font-size: 0.72rem;
+	letter-spacing: 0.03em;
+}
+
+.portrait-meta .loc {
+	color: var(--muted);
+}
+
+.portrait-meta .status {
+	color: var(--accent);
+}
+
+/* Circular author avatar (article foot) */
+.foot-avatar {
+	flex-shrink: 0;
+	width: 42px;
+	height: 42px;
+	border: 1px solid var(--rule-2);
+	border-radius: 50%;
+	object-fit: cover;
+	object-position: 58% 18%;
+	box-shadow: inset 0 0 0 3px var(--accent-soft);
+	background: var(--bg-2);
+}
+
 section.blk {
 	padding: clamp(44px, 6vw, 74px) 0;
 	border-bottom: 1px solid var(--rule);
@@ -545,6 +681,19 @@ section.blk {
 	grid-template-columns: 1.1fr 0.9fr;
 	gap: 28px;
 	align-items: stretch;
+}
+
+/* whoami: bio + portrait + vitals */
+.identity-grid.with-portrait {
+	grid-template-columns: minmax(0, 1.15fr) minmax(220px, 0.72fr) minmax(200px, 0.78fr);
+	align-items: start;
+}
+
+.about-hero-grid {
+	display: grid;
+	grid-template-columns: minmax(240px, 0.78fr) minmax(0, 1.22fr);
+	gap: clamp(28px, 5vw, 56px);
+	align-items: center;
 }
 
 .about p {
@@ -1155,15 +1304,32 @@ footer.site {
 	scroll-margin-top: 92px;
 }
 
+@media (max-width: 980px) {
+	.identity-grid.with-portrait {
+		grid-template-columns: minmax(0, 1fr) minmax(200px, 0.7fr);
+	}
+
+	.identity-grid.with-portrait .about-card {
+		grid-column: 1 / -1;
+	}
+}
+
 @media (max-width: 860px) {
 	.hero-grid,
 	.identity-grid,
-	.latest-grid {
+	.identity-grid.with-portrait,
+	.latest-grid,
+	.about-hero-grid {
 		grid-template-columns: 1fr;
 	}
 
 	.hero-panel {
 		max-width: 560px;
+	}
+
+	.hero-shot,
+	.portrait-card {
+		max-width: 420px;
 	}
 
 	.topics {
