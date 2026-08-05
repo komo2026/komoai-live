@@ -22,10 +22,9 @@ Hashnode (write/publish)
 
 Build-time env (see `.env.example`): `HASHNODE_TOKEN` (required, Pro PAT),
 optional `HASHNODE_PUBLICATION_ID` (preferred), optional `HASHNODE_PUBLICATION_HOST`
-(Hashnode CMS host metadata — defaults to the historical `komoai.live` host until
-the Hashnode dashboard custom domain is switched). Set them as Vercel Project env
-vars for production builds; locally they come from `.env`. Without a token the site
-builds with an **empty** blog (graceful empty states) rather than failing.
+(Hashnode CMS host metadata — defaults to `reidmarlow.com`). Set them as Vercel
+Project env vars for production builds; locally they come from `.env`. Without a
+token the site builds with an **empty** blog (graceful empty states) rather than failing.
 
 ## Develop
 
