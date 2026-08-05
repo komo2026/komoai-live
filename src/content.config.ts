@@ -4,12 +4,17 @@ import { z } from 'astro/zod';
 
 // ── Hashnode headless CMS ──────────────────────────────────────────────
 // Content lives in Hashnode (the single source of truth) and is pulled at
-// build time over the GraphQL API. komoai.live is the only public front-end.
-// A Hashnode webhook (publish/update/delete) triggers a Vercel rebuild.
+// build time over the GraphQL API. Public front-end is reidmarlow.com.
+// "komo" is an internal codename only — never the public brand.
+// A deploy hook / webhook triggers a Vercel rebuild.
 //
 // Required build-time env:
-//   HASHNODE_TOKEN            Hashnode Personal Access Token (Pro). Bearer auth.
-//   HASHNODE_PUBLICATION_HOST publication host. Defaults to komoai.live.
+//   HASHNODE_TOKEN              Hashnode Personal Access Token (Pro). Bearer auth.
+// Optional:
+//   HASHNODE_PUBLICATION_ID     stable publication id (preferred).
+//   HASHNODE_PUBLICATION_HOST   Hashnode host metadata for GraphQL lookup when
+//                               id is unset. Defaults to komoai.live until the
+//                               Hashnode dashboard custom domain is switched.
 // Note (2026-06): the live endpoint is gql-beta.hashnode.com; the old
 // gql.hashnode.com is deprecated (301s to an announcement page). GraphQL
 // read access is Pro-gated, so the token is required to fetch content.
@@ -24,6 +29,13 @@ import { z } from 'astro/zod';
 // Ref: Hashnode/support#86, dev.to/highcenburg Stale Cache Bug article.
 
 const HASHNODE_ENDPOINT = 'https://gql-beta.hashnode.com/';
+const PUBLICATION_ID =
+	import.meta.env.HASHNODE_PUBLICATION_ID ||
+	process.env.HASHNODE_PUBLICATION_ID ||
+	'';
+// Hashnode "host" is CMS metadata for GraphQL lookup — independent of the
+// public Vercel domain (reidmarlow.com). Keep until the Hashnode dashboard
+// custom domain is updated, then set HASHNODE_PUBLICATION_HOST=reidmarlow.com.
 const PUBLICATION_HOST =
 	import.meta.env.HASHNODE_PUBLICATION_HOST ||
 	process.env.HASHNODE_PUBLICATION_HOST ||
@@ -31,9 +43,35 @@ const PUBLICATION_HOST =
 const HASHNODE_TOKEN =
 	import.meta.env.HASHNODE_TOKEN ?? process.env.HASHNODE_TOKEN;
 
-const POSTS_QUERY = `
+const POSTS_QUERY_BY_HOST = `
 	query PublicationPosts($host: String!, $first: Int!, $after: String) {
 		publication(host: $host) {
+			id
+			posts(first: $first, after: $after) {
+				edges {
+					node {
+						id
+						slug
+						title
+						brief
+						publishedAt
+						updatedAt
+						readTimeInMinutes
+						coverImage { url }
+						tags { id name slug }
+						seo { title description }
+						content { html }
+					}
+				}
+				pageInfo { hasNextPage endCursor }
+			}
+		}
+	}
+`;
+
+const POSTS_QUERY_BY_ID = `
+	query PublicationPostsById($id: ObjectId!, $first: Int!, $after: String) {
+		publication(id: $id) {
 			id
 			posts(first: $first, after: $after) {
 				edges {
@@ -76,6 +114,9 @@ function hashnodeLoader(): Loader {
 			// Retry the whole request on transient failure (network / HTTP 5xx /
 			// GraphQL error) — Stellate can miss right after a publish. 2s backoff.
 			const MAX_FETCH_RETRIES = 2;
+			const lookup = PUBLICATION_ID
+				? `id=${PUBLICATION_ID}`
+				: `host=${PUBLICATION_HOST}`;
 
 			try {
 				do {
@@ -90,10 +131,17 @@ function hashnodeLoader(): Loader {
 									'Content-Type': 'application/json',
 									Authorization: `Bearer ${HASHNODE_TOKEN}`,
 								},
-								body: JSON.stringify({
-									query: POSTS_QUERY,
-									variables: { host: PUBLICATION_HOST, first: 20, after },
-								}),
+								body: JSON.stringify(
+									PUBLICATION_ID
+										? {
+												query: POSTS_QUERY_BY_ID,
+												variables: { id: PUBLICATION_ID, first: 20, after },
+											}
+										: {
+												query: POSTS_QUERY_BY_HOST,
+												variables: { host: PUBLICATION_HOST, first: 20, after },
+											},
+								),
 							});
 							if (!res.ok) {
 								throw new Error(`Hashnode API responded ${res.status} ${res.statusText}`);
@@ -107,8 +155,10 @@ function hashnodeLoader(): Loader {
 						} catch (err) {
 							lastErr = err as Error;
 							if (attempt < MAX_FETCH_RETRIES) {
-								logger.warn(`Hashnode request attempt ${attempt + 1} failed, retrying in 2s: ${lastErr.message}`);
-								await new Promise(r => setTimeout(r, 2000));
+								logger.warn(
+									`Hashnode request attempt ${attempt + 1} failed, retrying in 2s: ${lastErr.message}`,
+								);
+								await new Promise((r) => setTimeout(r, 2000));
 							}
 						}
 					}
@@ -117,7 +167,7 @@ function hashnodeLoader(): Loader {
 
 					const publication = json.data?.publication;
 					if (!publication) {
-						throw new Error(`Publication not found for host "${PUBLICATION_HOST}"`);
+						throw new Error(`Publication not found for ${lookup}`);
 					}
 
 					const connection = publication.posts;
@@ -154,7 +204,7 @@ function hashnodeLoader(): Loader {
 						: null;
 				} while (after);
 
-				logger.info(`Loaded ${total} post(s) from Hashnode (${PUBLICATION_HOST}).`);
+				logger.info(`Loaded ${total} post(s) from Hashnode (${lookup}).`);
 			} catch (err) {
 				// On a real CMS error, FAIL the build so Vercel keeps the last good deploy
 				// (a genuinely empty publication returns 0 posts with no error and still builds).

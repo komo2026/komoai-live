@@ -1,6 +1,6 @@
 // Global site data. Import from anywhere with the `import` keyword.
 
-export const SITE_TITLE = 'komo.sh';
+export const SITE_TITLE = 'Reid Marlow';
 export const SITE_DESCRIPTION =
 	'Small sharp tools, AI agents, and the boring plumbing that makes them work. Linux, Python, automation.';
 
