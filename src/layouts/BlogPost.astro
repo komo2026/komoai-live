@@ -3,7 +3,7 @@ import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import portrait from '../assets/reid-marlow.jpg';
 import FormattedDate from '../components/FormattedDate.astro';
-import { AUTHOR, TAGLINE, TOOLS } from '../consts';
+import { AUTHOR, TOOLS } from '../consts';
 import BaseLayout from './BaseLayout.astro';
 
 type Props = CollectionEntry<'blog'>['data'];
@@ -96,7 +96,7 @@ const {
 						<div>
 							<div class="foot-name">Written by {AUTHOR.name}</div>
 							<p>
-								{TAGLINE} — <a href="/about">more about me</a>.
+								Field notes on tools and agents — <a href="/about">more about me</a>.
 							</p>
 						</div>
 					</div>

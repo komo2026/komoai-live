@@ -3,7 +3,7 @@ import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import portrait from '../assets/reid-marlow.jpg';
 import FormattedDate from '../components/FormattedDate.astro';
-import { AUTHOR, PRINCIPLES, QUOTE, SITE_DESCRIPTION, SITE_TITLE, TAGLINE } from '../consts';
+import { AUTHOR, PRINCIPLES, QUOTE, SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 const posts = (await getCollection('blog')).sort(
@@ -92,7 +92,7 @@ const recent = rest.slice(0, 5);
 						<dt>pronouns</dt>
 						<dd>{AUTHOR.pronouns}</dd>
 						<dt>mode</dt>
-						<dd>{TAGLINE}</dd>
+						<dd>field notes</dd>
 					</dl>
 				</div>
 			</div>

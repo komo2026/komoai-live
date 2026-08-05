@@ -4,8 +4,7 @@ export const SITE_TITLE = 'Reid Marlow';
 export const SITE_DESCRIPTION =
 	'Small sharp tools, AI agents, and the boring plumbing that makes them work. Linux, Python, automation.';
 
-// Hero / brand tagline shown on the homepage.
-export const TAGLINE = 'ship small. overengineer nothing.';
+// Hero quote + terminal principles (no separate marketing tagline).
 export const QUOTE =
 	'We may have knowledge of the past but cannot control it; we may control the future but have no knowledge of it.';
 export const PRINCIPLES =

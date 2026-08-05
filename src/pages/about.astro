@@ -1,7 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import portrait from '../assets/reid-marlow.jpg';
-import { AUTHOR, SOCIAL_LINKS, TAGLINE } from '../consts';
+import { AUTHOR, SITE_DESCRIPTION, SOCIAL_LINKS } from '../consts';
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
@@ -31,7 +31,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 				<div>
 					<div class="prompt"><span class="g">$</span> cat about.md</div>
 					<h1 class="page-title">whoami</h1>
-					<p class="page-sub">{TAGLINE}</p>
+					<p class="page-sub">{SITE_DESCRIPTION}</p>
 					<div class="about-card" style="margin-top: 24px;">
 						<dl>
 							<dt>name</dt>
