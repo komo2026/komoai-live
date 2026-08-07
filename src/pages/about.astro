@@ -78,5 +78,36 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 				}
 			</div>
 		</section>
+
+		<section class="blk about" id="newsletter" style="border-bottom:none;padding-top:10px;">
+			<div class="sec-head"><h2>Newsletter</h2></div>
+			<p class="dim">
+				Occasional notes from this field notebook. Reid Marlow only — not KolmoPDF product mail,
+				not other blogs.
+			</p>
+			<form
+				method="post"
+				action="https://mail.komoai.net:8443/subscription/form"
+				accept-charset="utf-8"
+				class="newsletter-form"
+			>
+				<label for="newsletter-email" class="skip">Email</label>
+				<input
+					id="newsletter-email"
+					name="email"
+					type="email"
+					inputmode="email"
+					autocomplete="email"
+					spellcheck="false"
+					placeholder="you@example.com"
+					required
+				/>
+				<input name="nonce" class="skip" tabindex="-1" autocomplete="off" value="" />
+				{/* reid-blog only — never product / Dean lists */}
+				<input type="hidden" name="l" value="1fdf5abe-c19b-4da3-b1b2-94f92a235466" />
+				<button class="btn primary" type="submit">Subscribe</button>
+			</form>
+			<p class="dim">Double opt-in · unsubscribe anytime</p>
+		</section>
 	</div>
 </BaseLayout>
