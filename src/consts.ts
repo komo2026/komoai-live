@@ -25,11 +25,16 @@ export const NAV_LINKS = [
 	{ href: '/about', label: 'About' },
 ];
 
-// Social links shown in the footer.
+// Social links shown in the footer (icon + label).
+// icon keys: x | threads | reddit | github | youtube | bluesky
+// Omit entries until a real URL exists (no placeholder #).
 export const SOCIAL_LINKS = [
-	{ label: 'X', href: 'https://x.com/swartzberg_ryan' },
-	{ label: 'Bluesky', href: 'https://bsky.app/profile/komoai.net' },
-	{ label: 'YouTube', href: 'https://www.youtube.com/channel/UCHIB3rEdXqRDERY7qKehgpg' },
+	{ label: 'X', href: 'https://x.com/reidmarlowai', icon: 'x' },
+	{ label: 'Threads', href: 'https://www.threads.com/@reidmarlowai', icon: 'threads' },
+	{ label: 'Bluesky', href: 'https://bsky.app/profile/komoai.net', icon: 'bluesky' },
+	{ label: 'YouTube', href: 'https://www.youtube.com/channel/UCHIB3rEdXqRDERY7qKehgpg', icon: 'youtube' },
+	{ label: 'GitHub', href: 'https://github.com/reidmarlow', icon: 'github' },
+	// Reddit: pending handle/URL
 ];
 
 // Recommended tools. Single source of truth for both the homepage "Tools"

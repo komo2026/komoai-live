@@ -1297,6 +1297,30 @@ footer.site {
 	text-decoration: none;
 }
 
+/* Social icon links — monochrome (currentColor) */
+.foot .socials a.social-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 6px 10px;
+}
+.foot .socials .social-icon {
+	display: inline-flex;
+	width: 15px;
+	height: 15px;
+	flex: 0 0 15px;
+}
+.foot .socials .social-icon svg {
+	width: 15px;
+	height: 15px;
+	display: block;
+	fill: currentColor;
+}
+.foot .socials .social-label {
+	line-height: 1;
+}
+
+
 .colophon {
 	margin-top: 24px;
 	padding-top: 18px;
