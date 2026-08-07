@@ -68,8 +68,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 		<section class="blk about" id="newsletter" style="border-bottom:none;padding-top:10px;">
 			<div class="sec-head"><h2>Newsletter</h2></div>
 			<p class="dim">
-				Occasional notes from this field notebook. Reid Marlow only — not KolmoPDF product mail,
-				not other blogs.
+				Occasional notes from this field notebook — when there's something worth saying.
 			</p>
 			<form id="newsletter-form" class="newsletter-form">
 				<label for="newsletter-email" class="skip">Email</label>
@@ -86,7 +85,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 				<input name="website" class="skip" tabindex="-1" autocomplete="off" value="" />
 				<button class="btn primary" type="submit" id="newsletter-btn">Subscribe</button>
 			</form>
-			<p class="dim" id="newsletter-msg">One click · Reid only (not product mail) · unsubscribe anytime</p>
+			<p class="dim" id="newsletter-msg">Occasional notes. Unsubscribe anytime.</p>
 			<script is:inline>
 				(function () {
 					var form = document.getElementById('newsletter-form');
