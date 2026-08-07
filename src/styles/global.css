@@ -1447,3 +1447,25 @@ footer.site {
 		transition: none !important;
 	}
 }
+
+/* Newsletter (About) — Reid list only */
+.newsletter-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin: 14px 0 8px;
+}
+.newsletter-form input[type='email'] {
+  flex: 1 1 220px;
+  min-width: 200px;
+  padding: 10px 12px;
+  border: 1px solid var(--rule-2);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+}
+.newsletter-form button {
+  flex: 0 0 auto;
+}
