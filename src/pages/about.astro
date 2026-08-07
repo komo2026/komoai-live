@@ -71,12 +71,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 				Occasional notes from this field notebook. Reid Marlow only — not KolmoPDF product mail,
 				not other blogs.
 			</p>
-			<form
-				method="post"
-				action="https://mail.komoai.net:8443/subscription/form"
-				accept-charset="utf-8"
-				class="newsletter-form"
-			>
+			<form id="newsletter-form" class="newsletter-form">
 				<label for="newsletter-email" class="skip">Email</label>
 				<input
 					id="newsletter-email"
@@ -88,12 +83,48 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 					placeholder="you@example.com"
 					required
 				/>
-				<input name="nonce" class="skip" tabindex="-1" autocomplete="off" value="" />
-				{/* reid-blog only — never product / Dean lists */}
-				<input type="hidden" name="l" value="1fdf5abe-c19b-4da3-b1b2-94f92a235466" />
-				<button class="btn primary" type="submit">Subscribe</button>
+				<input name="website" class="skip" tabindex="-1" autocomplete="off" value="" />
+				<button class="btn primary" type="submit" id="newsletter-btn">Subscribe</button>
 			</form>
-			<p class="dim">Double opt-in · unsubscribe anytime</p>
+			<p class="dim" id="newsletter-msg">One click · Reid only (not product mail) · unsubscribe anytime</p>
+			<script is:inline>
+				(function () {
+					var form = document.getElementById('newsletter-form');
+					if (!form) return;
+					var btn = document.getElementById('newsletter-btn');
+					var msg = document.getElementById('newsletter-msg');
+					form.addEventListener('submit', function (e) {
+						e.preventDefault();
+						var email = (form.email && form.email.value || '').trim();
+						if (!email) return;
+						btn.disabled = true;
+						msg.textContent = 'Subscribing…';
+						fetch('https://mail.komoai.net:8443/api/subscribe', {
+							method: 'POST',
+							headers: { 'Content-Type': 'application/json' },
+							body: JSON.stringify({
+								email: email,
+								blog: 'reid',
+								website: form.website ? form.website.value : '',
+							}),
+						})
+							.then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
+							.then(function (x) {
+								if (x.ok && x.j && x.j.ok) {
+									msg.textContent = "You're in. Thanks — no confirmation email needed.";
+									form.reset();
+								} else {
+									msg.textContent = 'Could not subscribe. Check the address and try again.';
+									btn.disabled = false;
+								}
+							})
+							.catch(function () {
+								msg.textContent = 'Network error. Try again in a moment.';
+								btn.disabled = false;
+							});
+					});
+				})();
+			</script>
 		</section>
 
 	</div>
