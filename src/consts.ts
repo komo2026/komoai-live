@@ -40,6 +40,8 @@ export const SOCIAL_LINKS = [
 // Recommended tools. Single source of truth for both the homepage "Tools"
 // section and the per-post sidebar (see BlogPost.astro), so every blog page
 // carries the outbound link automatically — no manual authoring per post.
+// Order matters: first entry is the primary feature on the homepage; the rest
+// sit under it as secondary picks. KolmoPDF stays first on purpose.
 export const TOOLS = [
 	{
 		name: 'KolmoPDF',
@@ -48,5 +50,18 @@ export const TOOLS = [
 		host: 'kolmopdf.com',
 		blurb:
 			'VLM-based PDF parsing that keeps formulas, tables, code blocks, and multi-column order intact — clean text you can wire straight into an agent or knowledge base.',
+		// Longer homepage copy. Sidebar uses `blurb` only.
+		longBlurb:
+			"Most of what I automate starts by getting clean text out of a PDF, and ordinary parsers fall apart the moment a page has two columns, a formula, or a table that runs across the page break. KolmoPDF is the one I reach for: VLM-based parsing that keeps formulas, tables, code blocks, and multi-column order intact, layout-preserving translation when the source isn't in English, and an API clean enough to wire straight into an agent or a knowledge base. It runs the other direction too - Markdown back out to DOCX, HTML, LaTeX, or PDF.",
+	},
+	{
+		name: 'Typeless',
+		kicker: 'voice -> text',
+		href: 'https://www.typeless.com',
+		host: 'typeless.com',
+		blurb:
+			'AI voice dictation that lands as clean prose — filler stripped, punctuation placed — so drafting does not have to start at the keyboard.',
+		longBlurb:
+			"When the bottleneck is the keyboard, not the idea, I switch to Typeless. Speak naturally and it drops polished text into whatever app is focused — messages, notes, editors — with filler words gone and punctuation already in place. Not a full writing stack, just a faster way to get the first draft out of my head.",
 	},
 ];

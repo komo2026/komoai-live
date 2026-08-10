@@ -780,6 +780,17 @@ section.blk {
 	color: var(--muted);
 }
 
+.tools-stack {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+}
+
+.tools-stack .tools-secondary {
+	max-width: 100%;
+}
+
+
 .feature pre,
 .empty pre {
 	margin: 0 0 18px;

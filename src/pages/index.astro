@@ -3,7 +3,7 @@ import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import portrait from '../assets/reid-marlow.jpg';
 import FormattedDate from '../components/FormattedDate.astro';
-import { AUTHOR, PRINCIPLES, QUOTE, SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import { AUTHOR, PRINCIPLES, QUOTE, SITE_DESCRIPTION, SITE_TITLE, TOOLS } from '../consts';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 const posts = (await getCollection('blog')).sort(
@@ -171,23 +171,31 @@ const recent = rest.slice(0, 5);
 		<section class="blk" id="tools">
 			<div class="sec-head"><h2>Tools</h2></div>
 			<p style="max-width:62ch;margin:0 0 22px;color:var(--muted);font-size:0.97rem;">
-				Not sponsorships - just software that earns a place in the workflow and then
-				stays out of the way.
+				KolmoPDF is the daily driver; the rest are useful adjacent picks.
 			</p>
-			<a class="feature" href="https://kolmopdf.com" target="_blank" rel="noopener">
-				<div class="kicker">utility / pdf -&gt; markdown</div>
-				<h3>KolmoPDF</h3>
-				<p>
-					Most of what I automate starts by getting clean text out of a PDF, and ordinary
-					parsers fall apart the moment a page has two columns, a formula, or a table
-					that runs across the page break. KolmoPDF is the one I reach for: VLM-based
-					parsing that keeps formulas, tables, code blocks, and multi-column order
-					intact, layout-preserving translation when the source isn&apos;t in English, and
-					an API clean enough to wire straight into an agent or a knowledge base. It runs
-					the other direction too - Markdown back out to DOCX, HTML, LaTeX, or PDF.
-				</p>
-				<div class="meta">kolmopdf.com -&gt;</div>
-			</a>
+			<div class="tools-stack">
+				{
+					TOOLS.map((tool, i) =>
+						i === 0 ? (
+							<a class="feature" href={tool.href} target="_blank" rel="noopener">
+								<div class="kicker">utility / {tool.kicker}</div>
+								<h3>{tool.name}</h3>
+								<p>{tool.longBlurb ?? tool.blurb}</p>
+								<div class="meta">{tool.host} -&gt;</div>
+							</a>
+						) : (
+							<a class="tool-rec tools-secondary" href={tool.href} target="_blank" rel="noopener">
+								<div class="tool-rec-top">
+									<span class="tool-name">{tool.name}</span>
+									<span class="tool-tag">{tool.kicker}</span>
+								</div>
+								<p>{tool.longBlurb ?? tool.blurb}</p>
+								<span class="tool-link">{tool.host} -&gt;</span>
+							</a>
+						),
+					)
+				}
+			</div>
 		</section>
 	</div>
 </BaseLayout>
