@@ -31,7 +31,7 @@ export const NAV_LINKS = [
 export const SOCIAL_LINKS = [
 	{ label: 'X', href: 'https://x.com/reidmarlowai', icon: 'x' },
 	{ label: 'Threads', href: 'https://www.threads.com/@reidmarlowai', icon: 'threads' },
-	{ label: 'Bluesky', href: 'https://bsky.app/profile/komoai.net', icon: 'bluesky' },
+	{ label: 'Bluesky', href: 'https://bsky.app/profile/reidmarlow.com', icon: 'bluesky' },
 	{ label: 'YouTube', href: 'https://www.youtube.com/channel/UCHIB3rEdXqRDERY7qKehgpg', icon: 'youtube' },
 	{ label: 'GitHub', href: 'https://github.com/reidmarlow', icon: 'github' },
 	// Reddit: pending handle/URL
