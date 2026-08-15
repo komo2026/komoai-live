@@ -1,31 +1,20 @@
 import { defineCollection } from 'astro:content';
-import type { Loader } from 'astro/loaders';
+import { glob, type Loader } from 'astro/loaders';
 import { z } from 'astro/zod';
 
 // ── Hashnode headless CMS ──────────────────────────────────────────────
-// Content lives in Hashnode (the single source of truth) and is pulled at
-// build time over the GraphQL API. Public front-end is reidmarlow.com.
-// "komo" is an internal codename only — never the public brand.
-// A deploy hook / webhook triggers a Vercel rebuild.
+// Content normally lives in Hashnode and is pulled at build time over the
+// GraphQL API. Public front-end is reidmarlow.com.
 //
-// Required build-time env:
-//   HASHNODE_TOKEN              Hashnode Personal Access Token (Pro). Bearer auth.
-// Optional:
-//   HASHNODE_PUBLICATION_ID     stable publication id (preferred).
-//   HASHNODE_PUBLICATION_HOST   Hashnode host metadata for GraphQL lookup when
-//                               id is unset. Defaults to reidmarlow.com.
-// Note (2026-06): the live endpoint is gql-beta.hashnode.com; the old
-// gql.hashnode.com is deprecated (301s to an announcement page). GraphQL
-// read access is Pro-gated, so the token is required to fetch content.
-//
-// ⚠️  Stellate CDN cache: Hashnode's GraphQL API is fronted by Stellate.
-// Stellate tracks entities by their `id` field to invalidate cached queries
-// after mutations (publish/update/delete). If a query does NOT include `id`
-// on every entity (publication, posts.edges.node, tags), Stellate cannot
-// purge the stale response — new posts may not appear in the list for hours.
-// Hashnode engineers use an ESLint plugin (`require-id-when-available`)
-// internally to prevent this. Always include `id` on every entity you query.
-// Ref: Hashnode/support#86, dev.to/highcenburg Stale Cache Bug article.
+// Emergency local fallback:
+// If Hashnode API access is unavailable, set BLOG_CONTENT_SOURCE=local and put
+// MD/MDX posts in src/content/blog. This bypass keeps the public site publishable
+// without changing the public URL structure. Default remains Hashnode.
+
+const CONTENT_SOURCE =
+	import.meta.env.BLOG_CONTENT_SOURCE || process.env.BLOG_CONTENT_SOURCE || 'hashnode';
+
+const localLoader = glob({ pattern: '**/*.{md,mdx}', base: './src/content/blog' });
 
 const HASHNODE_ENDPOINT = 'https://gql-beta.hashnode.com/';
 const PUBLICATION_ID =
@@ -214,10 +203,9 @@ function hashnodeLoader(): Loader {
 }
 
 const blog = defineCollection({
-	loader: hashnodeLoader(),
-	// Schema mirrors the Hashnode fields we pull. Field names (title /
-	// description / pubDate) are kept stable so the page/RSS templates need no
-	// churn; the rendered HTML is stored separately and surfaced via render().
+	loader: CONTENT_SOURCE === 'local' ? localLoader : hashnodeLoader(),
+	// Schema mirrors the fields needed by the page/RSS templates and the
+	// Hashnode fields we pull.
 	schema: z.object({
 		title: z.string(),
 		description: z.string(),
