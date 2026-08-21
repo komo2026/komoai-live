@@ -4,27 +4,20 @@ Personal developer blog for **Reid Marlow**. Built with [Astro](https://astro.bu
 Design: calm indie-dev, e-ink warm (light) ↔ soft dark, monospace + green accents.
 
 - **Live:** https://reidmarlow.com
-- **Stack:** Astro 7 · **Hashnode (headless CMS) as the single content source** · RSS · sitemap · zero client JS except the theme toggle.
+- **Stack:** Astro 7 · **local Markdown/MDX in `src/content/blog`** · RSS · sitemap · zero client JS except the theme toggle.
 - **Internal codename:** `komo` (repo/project names may still say komoai-live; never the public brand).
 
-## Content model (headless)
+## Content model
 
-Posts are **written in Hashnode** and pulled at **build time** over the Hashnode
-GraphQL API (`gql-beta.hashnode.com`, Bearer PAT). reidmarlow.com is the only public
-front-end; Hashnode handles the editor, image hosting, drafts and scheduling.
+Posts are **Markdown files in this repo**. Vercel builds from GitHub `main`. Hashnode is **not** in the publish path (Pro API expired; skip by default).
 
 ```
-Hashnode (write/publish)
-   └─ GraphQL  ──build-time──▶  Astro content loader (src/content.config.ts)
-                                   └─▶ reidmarlow.com/<slug>  (public domain + front-end)
-   └─ Deploy hook (publish/update) ──▶ Vercel rebuild
+src/content/blog/<slug>.md
+   └─ git push origin main ──▶  Vercel build
+                                   └─▶ reidmarlow.com/<slug>  (public domain)
 ```
 
-Build-time env (see `.env.example`): `HASHNODE_TOKEN` (required, Pro PAT),
-optional `HASHNODE_PUBLICATION_ID` (preferred), optional `HASHNODE_PUBLICATION_HOST`
-(Hashnode CMS host metadata — defaults to `reidmarlow.com`). Set them as Vercel
-Project env vars for production builds; locally they come from `.env`. Without a
-token the site builds with an **empty** blog (graceful empty states) rather than failing.
+No Hashnode token is required to build. Cover images may still be remote URLs in frontmatter.
 
 ## Develop
 
@@ -40,7 +33,8 @@ npm run preview  # preview the production build
 ```
 src/
 ├─ consts.ts              # site title, description, nav, socials, author info
-├─ content.config.ts      # Hashnode GraphQL loader + blog collection schema
+├─ content.config.ts      # local glob loader + blog collection schema
+├─ content/blog/          # posts (one .md / .mdx per slug)
 ├─ styles/global.css      # the whole design system (theme vars + components)
 ├─ components/            # BaseHead, Header (+ theme toggle), Footer, FormattedDate
 ├─ layouts/
@@ -56,14 +50,11 @@ src/
 
 ## Publish a post
 
-Write and publish in **Hashnode** (set the slug, SEO title/description, cover image
-and tags there). On publish, fire the Vercel deploy hook; the new build pulls the
-post via GraphQL and it appears at `/<slug>/`. The Hashnode `slug` becomes the URL
-slug. The homepage, blog archive and RSS feed pick it up automatically; with no
-posts the site shows empty states instead.
+1. Add `src/content/blog/<slug>.md` with frontmatter (`title`, `description`, `pubDate`; optional `tags`, `coverImage`, `seoTitle`, `seoDescription`).
+2. `git push` to `main`. Wait until `https://reidmarlow.com/<slug>` returns 200.
+3. Cross-post to **dev.to** with `canonical_url` = that live URL.
 
-To preview locally with real content, put a `HASHNODE_TOKEN` in `.env` and run
-`npm run build` / `npm run preview`.
+The Hashnode `slug` (if a historical post was imported) is still the URL slug. Homepage, archive and RSS pick new files up automatically.
 
 ## Theme
 
